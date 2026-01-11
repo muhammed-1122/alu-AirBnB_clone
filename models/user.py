@@ -2,9 +2,8 @@
 """Module for User class."""
 from models.base_model import BaseModel
 
-
 class User(BaseModel):
-    """Defines a user by various attributes."""
+    """Represent a User."""
     email = ""
     password = ""
     first_name = ""

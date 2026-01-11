@@ -107,7 +107,6 @@ class HBNBCommand(cmd.Cmd):
         attr_name = args[2]
         attr_val = args[3]
 
-        # Handle type casting for int and float
         try:
             if hasattr(obj, attr_name):
                 type_hint = type(getattr(obj, attr_name))
@@ -130,7 +129,6 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Do nothing on empty line."""
         pass
-
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
