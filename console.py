@@ -20,7 +20,7 @@ class HBNBCommand(cmd.Cmd):
     }
 
     def do_create(self, arg):
-        """Creates a new instance, saves it and prints the id."""
+        """Creates a new instance and saves it."""
         args = shlex.split(arg)
         if not args:
             print("** class name missing **")
@@ -32,7 +32,7 @@ class HBNBCommand(cmd.Cmd):
             print(new_instance.id)
 
     def do_show(self, arg):
-        """Prints the string representation of an instance."""
+        """Prints string representation of an instance."""
         args = shlex.split(arg)
         if not args:
             print("** class name missing **")
@@ -48,7 +48,7 @@ class HBNBCommand(cmd.Cmd):
                 print(storage.all()[key])
 
     def do_destroy(self, arg):
-        """Deletes an instance based on the class name and id."""
+        """Deletes an instance based on class name and id."""
         args = shlex.split(arg)
         if not args:
             print("** class name missing **")
@@ -65,23 +65,23 @@ class HBNBCommand(cmd.Cmd):
                 storage.save()
 
     def do_all(self, arg):
-        """Prints all string representation of all instances."""
+        """Prints all string representations of instances."""
         args = shlex.split(arg)
         obj_list = []
-        if not args:
-            for obj in storage.all().values():
-                obj_list.append(str(obj))
-        elif args[0] not in self.__classes:
-            print("** class doesn't exist **")
-            return
-        else:
+        if len(args) > 0:
+            if args[0] not in self.__classes:
+                print("** class doesn't exist **")
+                return
             for key, obj in storage.all().items():
                 if key.startswith(args[0]):
                     obj_list.append(str(obj))
+        else:
+            for obj in storage.all().values():
+                obj_list.append(str(obj))
         print(obj_list)
 
     def do_update(self, arg):
-        """Updates an instance by adding or updating attribute."""
+        """Updates an instance attribute."""
         args = shlex.split(arg)
         if not args:
             print("** class name missing **")
@@ -107,15 +107,15 @@ class HBNBCommand(cmd.Cmd):
         attr_name = args[2]
         attr_val = args[3]
 
-        # Casting to the correct type
+        # Handle type casting for int and float
         try:
             if hasattr(obj, attr_name):
-                attr_type = type(getattr(obj, attr_name))
-                setattr(obj, attr_name, attr_type(attr_val))
+                type_hint = type(getattr(obj, attr_name))
+                setattr(obj, attr_name, type_hint(attr_val))
             else:
                 setattr(obj, attr_name, attr_val)
-        except ValueError:
-            pass  # Fallback if casting fails
+        except (ValueError, TypeError):
+            setattr(obj, attr_name, attr_val)
         obj.save()
 
     def do_quit(self, arg):
